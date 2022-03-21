@@ -11,13 +11,15 @@ import { Store } from "store";
 import { AppComponent } from "./containers/app/app.component";
 
 // components
+import { AppHeaderComponent } from "./components/app-header/app-header.component";
+import { AppNavComponent } from "./components/app-nav/app-nav.component";
 
 // routes
 export const ROUTES: Routes = [];
 
 @NgModule({
   imports: [BrowserModule, RouterModule.forRoot(ROUTES), AuthModule],
-  declarations: [AppComponent],
+  declarations: [AppComponent, AppHeaderComponent, AppNavComponent],
   providers: [Store],
   bootstrap: [AppComponent],
 })
