@@ -1,17 +1,20 @@
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
-import 'rxjs/add/operator/pluck';
-import 'rxjs/add/operator/distinctUntilChanged';
+import "rxjs/add/operator/pluck";
+import "rxjs/add/operator/distinctUntilChanged";
+import { User } from "./auth/shared/services/auth/auth.service";
 
 export interface State {
-  [key: string]: any
+  user: User;
+  [key: string]: any;
 }
 
-const state: State = {};
+const state: State = {
+  user: undefined,
+};
 
 export class Store {
-
   private subject = new BehaviorSubject<State>(state);
   private store = this.subject.asObservable().distinctUntilChanged();
 
@@ -26,5 +29,4 @@ export class Store {
   set(name: string, state: any) {
     this.subject.next({ ...this.value, [name]: state });
   }
-
 }
