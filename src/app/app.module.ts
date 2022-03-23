@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { Routes, RouterModule } from "@angular/router";
 import { AuthModule } from "./../auth/auth.module";
+import { HealthModule } from "./../health/health.module";
 
 import { Store } from "store";
 
@@ -18,7 +19,12 @@ import { AppNavComponent } from "./components/app-nav/app-nav.component";
 export const ROUTES: Routes = [];
 
 @NgModule({
-  imports: [BrowserModule, RouterModule.forRoot(ROUTES), AuthModule],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(ROUTES),
+    AuthModule,
+    HealthModule,
+  ],
   declarations: [AppComponent, AppHeaderComponent, AppNavComponent],
   providers: [Store],
   bootstrap: [AppComponent],
