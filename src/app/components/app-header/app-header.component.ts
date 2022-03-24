@@ -14,7 +14,7 @@ import { User } from "../../../auth/shared/services/auth/auth.service";
   template: `
     <div class="app-header">
       <div class="wrapper">
-        <img src="/img/logo.svg" alt="logout" />
+        <img src="/assets/img/logo.svg" alt="logo" />
         <div class="app-header__user-info" *ngIf="user?.authenticated">
           <span (click)="logoutUser()"></span>
         </div>

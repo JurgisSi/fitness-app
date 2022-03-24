@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { AngularFireModule, FirebaseAppConfig } from "angularfire2";
-import { AngularFireAuthModule } from "angularfire2/auth";
-import { AngularFireDatabaseModule } from "angularfire2/database";
+import { AngularFireModule } from "@angular/fire/compat";
+import { AngularFireAuthModule } from "@angular/fire/compat/auth";
+import { AngularFireDatabaseModule } from "@angular/fire/compat/database";
 import { SharedModule } from "./shared/shared.module";
 
 export const ROUTES: Routes = [
@@ -11,10 +11,15 @@ export const ROUTES: Routes = [
     path: "auth",
     children: [
       { path: "", pathMatch: "full", redirectTo: "login" },
-      { path: "login", loadChildren: "./login/login.module#LoginModule" },
+      {
+        path: "login",
+        loadChildren: () =>
+          import("./login/login.module").then((m) => m.LoginModule),
+      },
       {
         path: "register",
-        loadChildren: "./register/register.module#RegisterModule",
+        loadChildren: () =>
+          import("./register/register.module").then((m) => m.RegisterModule),
       },
     ],
   },

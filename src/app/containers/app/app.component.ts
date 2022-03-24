@@ -1,12 +1,11 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { Observable } from "rxjs";
+import { Store } from "store";
 import {
   AuthService,
   User,
 } from "../../../auth/shared/services/auth/auth.service";
-import { Store } from "store";
-import { Observable } from "rxjs/Observable";
-import { Subscription } from "rxjs/Subscription";
-import { Router } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -21,27 +20,23 @@ import { Router } from "@angular/router";
     </div>
   `,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   user$: Observable<User>;
-  subscription: Subscription;
 
   constructor(
     private store: Store,
     private authService: AuthService,
     private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.subscription = this.authService.auth$.subscribe();
+  ) {
     this.user$ = this.store.select<User>("user");
   }
 
+  ngOnInit(): void {}
+
   async onLogout() {
+    console.log("logout");
+
     await this.authService.logoutUser();
     this.router.navigate(["/auth/login"]);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

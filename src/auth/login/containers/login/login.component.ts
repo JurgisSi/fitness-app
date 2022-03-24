@@ -19,17 +19,15 @@ import { AuthService } from "../../../shared/services/auth/auth.service";
   `,
 })
 export class LoginComponent {
-  error: string;
+  error: string | undefined;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   async loginUser(event: FormGroup) {
     const { email, password } = event.value;
-    try {
-      await this.authService.loginUser(email, password);
-      this.router.navigate(["/"]);
-    } catch (err) {
-      this.error = err.message;
-    }
+    await this.authService
+      .loginUser(email, password)
+      .catch((err) => (this.error = err.message));
+    this.router.navigate(["/"]);
   }
 }
