@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Store } from "store";
-import "rxjs/add/operator/do";
 
 export interface User {
   email: string;
@@ -11,13 +10,13 @@ export interface User {
 
 @Injectable()
 export class AuthService {
-  auth$ = this.af.authState.do((next) => {
+  auth$ = this.af.authState.subscribe((next) => {
     if (!next) {
       this.store.set("user", null);
       return;
     }
     const user: User = {
-      email: next.email,
+      email: next.email || "",
       uid: next.uid,
       authenticated: true,
     };
@@ -26,15 +25,19 @@ export class AuthService {
 
   constructor(private af: AngularFireAuth, private store: Store) {}
 
+  get authState() {
+    return this.af.authState;
+  }
+
   createUser(email: string, password: string) {
-    return this.af.auth.createUserWithEmailAndPassword(email, password);
+    return this.af.createUserWithEmailAndPassword(email, password);
   }
 
   loginUser(email: string, password: string) {
-    return this.af.auth.signInWithEmailAndPassword(email, password);
+    return this.af.signInWithEmailAndPassword(email, password);
   }
 
   logoutUser() {
-    return this.af.auth.signOut();
+    return this.af.signOut();
   }
 }
