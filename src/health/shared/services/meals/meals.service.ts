@@ -1,15 +1,14 @@
 import { Injectable } from "@angular/core";
 import { AngularFireDatabase } from "@angular/fire/compat/database";
-import { map, Observable, of, take } from "rxjs";
+import { filter, map, Observable, of, take } from "rxjs";
 import { Store } from "store";
 import { AuthService } from "../../../../auth/shared/services/auth/auth.service";
 
 export interface Meal {
-  name: string;
-  ingrdients: string[];
-  timestamp: number;
-  key: string;
-  $exists: () => boolean;
+  name?: string;
+  ingrdients?: string[];
+  timestamp?: number;
+  key?: string;
 }
 
 @Injectable()
@@ -36,6 +35,19 @@ export class MealsService {
         this.store.set("meals", meals);
       });
     });
+  }
+
+  getMeal(key: string): Observable<Meal> {
+    if (!key) {
+      return of({});
+    }
+    return this.store.select<Meal[]>("meals").pipe(
+      take(1),
+      filter(Boolean),
+      map((meals) => {
+        return meals.find((meal: Meal) => meal.key === key);
+      })
+    );
   }
 
   addMeal(meal: Meal) {
