@@ -6,7 +6,7 @@ import { AuthService } from "../../../../auth/shared/services/auth/auth.service"
 
 export interface Meal {
   name?: string;
-  ingrdients?: string[];
+  ingredients?: string[];
   timestamp?: number;
   key?: string;
 }
@@ -42,7 +42,6 @@ export class MealsService {
       return of({});
     }
     return this.store.select<Meal[]>("meals").pipe(
-      take(1),
       filter(Boolean),
       map((meals) => {
         return meals.find((meal: Meal) => meal.key === key);
@@ -56,5 +55,9 @@ export class MealsService {
 
   removeMeal(key: string) {
     return this.db.list(`meals/${this.uid}`).remove(key);
+  }
+
+  updateMeal(key: string, meal: Meal) {
+    return this.db.object(`meals/${this.uid}/${key}`).update(meal);
   }
 }
