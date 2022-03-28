@@ -4,11 +4,15 @@ import { BehaviorSubject } from "rxjs";
 import { distinctUntilChanged, pluck } from "rxjs/operators";
 import { User } from "./auth/shared/services/auth/auth.service";
 import { Meal } from "./health/shared/services/meals/meals.service";
+import { ScheduleItem } from "./health/shared/services/schedule/schedule.service";
 import { Workout } from "./health/shared/services/workouts/workouts.service";
 
 export interface State {
   user: User;
   meals: Meal[];
+  selected: any;
+  list: Meal[] | Workout[];
+  schedule: ScheduleItem[];
   date: Date;
   workouts: Workout[];
   [key: string]: any;
@@ -17,6 +21,9 @@ export interface State {
 const state: State = {
   user: undefined,
   meals: undefined,
+  selected: undefined,
+  list: undefined,
+  schedule: undefined,
   date: undefined,
   workouts: undefined,
 };
