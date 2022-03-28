@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFireDatabase } from "@angular/fire/compat/database";
-import { filter, map, Observable, of, take } from "rxjs";
+import { filter, map, Observable, of, switchMap, take, tap } from "rxjs";
 import { Store } from "store";
 import { AuthService } from "../../../../auth/shared/services/auth/auth.service";
 
@@ -15,17 +15,13 @@ export interface Workout {
 
 @Injectable()
 export class WorkoutsService {
-  workouts$: Observable<Workout[]> = of();
   uid: string;
 
-  constructor(
-    private store: Store,
-    private db: AngularFireDatabase,
-    private authService: AuthService
-  ) {
-    this.authService.user.pipe(take(1)).subscribe((user) => {
+  workouts$: Observable<Workout[]> = this.authService.user.pipe(
+    take(1),
+    switchMap((user) => {
       this.uid = user.uid;
-      this.workouts$ = this.db
+      return this.db
         .list<any>(`workouts/${this.uid}`)
         .snapshotChanges()
         .pipe(
@@ -33,11 +29,17 @@ export class WorkoutsService {
             res.map((c) => ({ key: c.payload.key, ...c.payload.val() }))
           )
         );
-      this.workouts$.subscribe((workouts) => {
-        this.store.set("workouts", workouts);
-      });
-    });
-  }
+    }),
+    tap((workouts) => {
+      this.store.set("workouts", workouts);
+    })
+  );
+
+  constructor(
+    private store: Store,
+    private db: AngularFireDatabase,
+    private authService: AuthService
+  ) {}
 
   getWorkout(key: string): Observable<Workout> {
     if (!key) {
