@@ -76,8 +76,6 @@ export class ScheduleAssignComponent implements OnInit {
   private selected: string[] = [];
 
   ngOnInit(): void {
-    console.log(this.list);
-
     this.selected = [...this.section.assigned];
   }
 
